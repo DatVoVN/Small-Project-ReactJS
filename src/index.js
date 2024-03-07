@@ -69,14 +69,30 @@ function Header() {
   );
 }
 function Menu() {
+  const pizzas = pizzaData;
+  // const pizzas = [];
+  const numPizzas = pizzas.length;
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <div className="pizzas">
-        {pizzaData.map((pizza) => (
-          <Pizza pizzaObj={pizza} key={pizza.name} />
-        ))}
-      </div>
+
+      {numPizzas > 0 ? (
+        <>
+          {" "}
+          <p>
+            Authentic Italian cuisine. 6 creative dishes to choose from. All
+            from our stone oven, all organic, all delicious
+          </p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>We're still working on our menu. Please come back later</p>
+      )}
+
       {/* <Pizza
         name="Pizza Spinaci"
         ingredients="Tomato, mozarella, spinach, and ricotta cheese"
@@ -101,19 +117,35 @@ function Footer() {
   // if (hour >= openHour && hour <= closeHour) alert("We're currently open");
   // else alert("Sorry we're closed");
   return (
-    <div className="footer">
-      <footer>{new Date().toLocaleDateString()} We're currently open!</footer>
-    </div>
+    <footer className="footer">
+      {isOpen ? (
+        <Order openHour={openHour} closeHour={closeHour} />
+      ) : (
+        <p>
+          We're happy welcome you between {openHour} and {closeHour}
+        </p>
+      )}
+    </footer>
   );
   // return React.createElement("footer", null, "We're currently open!");
 }
 function Pizza(props) {
   return (
-    <div className="pizza">
+    <li className={`pizza ${props.pizzaObj.soldOut ? "sold-out" : ""}`}>
       <img src={props.pizzaObj.photoName} />
       <h2>{props.pizzaObj.name}</h2>
       <p>{props.pizzaObj.ingredients}</p>
-      <span>{props.pizzaObj.price + 3}</span>
+      <span>{props.pizzaObj.soldOut ? "SOLD OUT" : props.pizzaObj.price}</span>
+    </li>
+  );
+}
+function Order(props) {
+  return (
+    <div className="order">
+      <p>
+        We're open until until {props.closeHour}. Come visit us order online
+      </p>
+      <button className="btn">Order</button>
     </div>
   );
 }
